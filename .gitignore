@@ -1,0 +1,8 @@
+build*/
+cmake-build-*/
+.vs/
+.vscode/
+.idea/
+*.crr
+highscores.txt
+compile_commands.json
