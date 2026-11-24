@@ -3,6 +3,14 @@
 using namespace cr;
 using namespace cr::test;
 
+namespace {
+std::string replaceFirst(std::string text, char from, char to) {
+  const auto pos = text.find(from);
+  if (pos != std::string::npos) text[pos] = to;
+  return text;
+}
+}
+
 TEST(Maze, ParsesLegendAndSpawns) {
   const Maze m = parseOrDie(kSmallMaze);
   EXPECT_EQ(m.width(), 11);
@@ -26,24 +34,21 @@ TEST(Maze, ReadsNameMetadata) {
 }
 
 TEST(Maze, RejectsMissingPlayer) {
-  std::string text = kSmallMaze;
-  text[text.find('P')] = '.';
+  const std::string text = replaceFirst(kSmallMaze, 'P', '.');
   std::string error;
   EXPECT_FALSE(Maze::parse(text, &error));
   EXPECT_NE(error.find("'P'"), std::string::npos);
 }
 
 TEST(Maze, RejectsUnknownCharacterWithLocation) {
-  std::string text = kSmallMaze;
-  text[text.find('S')] = '?';
+  const std::string text = replaceFirst(kSmallMaze, 'S', '?');
   std::string error;
   EXPECT_FALSE(Maze::parse(text, &error));
   EXPECT_NE(error.find("row 2"), std::string::npos) << error;
 }
 
 TEST(Maze, RejectsDuplicateSlot) {
-  std::string text = kSmallMaze;
-  text[text.find('3')] = '1';
+  const std::string text = replaceFirst(kSmallMaze, '3', '1');
   EXPECT_FALSE(Maze::parse(text));
 }
 
